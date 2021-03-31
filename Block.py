@@ -3,7 +3,7 @@ import json
 from time import time
 
 class Block:
-    def __init__(self, index, timestamp, data, prevHash, nonce):
+    def __init__(self, index, timestamp, data, prevHash, nonce, proof):
         '''
             Default constructor for creating a block.
             Parameters
@@ -26,13 +26,15 @@ class Block:
         self.data = data
         self.prevHash = prevHash
         self.nonce = nonce
+        self.proof = proof
+        self.target = None
         super().__init__
 
     def getitem(self, index):
         return self.data[index]
 
     def block_info(self):
-        return {'index': self.index, 'timestamp': self.timestamp, 'data': self.data, 'prevHash': self.prevHash, 'nonce': self.nonce, 'currHash': self.compute_hash()}
+        return {'index': self.index, 'timestamp': self.timestamp, 'data': self.data, 'prevHash': self.prevHash, 'nonce': self.nonce, 'currHash': self.compute_hash(), 'proof': self.proof}
 
     def compute_hash(self):
         '''
