@@ -60,10 +60,3 @@ class BlockChain:
         guess = f'{last_proof}{proof}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:4] == "0000"
-
-
-if __name__ == "__main__":
-    blockchain = BlockChain()
-    schedule.every(5).seconds.do(blockchain.new_block)
-    while True:
-        schedule.run_pending()
