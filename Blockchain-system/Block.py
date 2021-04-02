@@ -30,9 +30,6 @@ class Block:
         self.target = None
         super().__init__
 
-    def getitem(self, index):
-        return self.data[index]
-
     def block_info(self):
         return {'index': self.index, 'timestamp': self.timestamp, 'data': self.data, 'prevHash': self.prevHash, 'nonce': self.nonce, 'currHash': self.compute_hash(), 'proof': self.proof}
 
@@ -45,6 +42,6 @@ class Block:
             str
                 sha1 hash of the attributes converted into hexadecimal string
         '''
-        # currHash = sha1(index+timestamp+data+prevHash+nonce)
+        # currHash = sha256(index+timestamp+data+prevHash+nonce)
         return hashlib.sha256(json.dumps(self.__dict__, separators=(',', ':')) \
         .encode("utf-8")).hexdigest()

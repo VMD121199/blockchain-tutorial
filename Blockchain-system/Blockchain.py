@@ -4,21 +4,23 @@ from time import time
 import random
 from Block import Block
 import schedule
+from urllib.parse import urlparse
 
 # Blockchain
 class BlockChain:
     def __init__(self):
         self.chain = []
         self.pending_transactions = []
+        self.nodes = set()
         self.new_block(1000, "00000000000000000000000000000000000000000000000000000")
     
     def new_block(self, Proof=None, previousHash=None):
         block = Block(index = len(self.chain)+1,
-                            timestamp = time(),
-                            data = self.pending_transactions,   
-                            prevHash = previousHash if len(self.chain) == 0 else Block.compute_hash(self.chain[len(self.chain) - 1]),
-                            nonce = random.randint(0, 2**32),
-                            proof = Proof if len(self.chain) == 0 else self.proof_of_work(self.chain[-1].proof))
+                        timestamp = time(),
+                        data = self.pending_transactions,   
+                        prevHash = previousHash if len(self.chain) == 0 else Block.compute_hash(self.chain[len(self.chain) - 1]),
+                        nonce = random.randint(0, 2**32),
+                        proof = Proof if len(self.chain) == 0 else self.proof_of_work(self.chain[-1].proof))
         self.pending_transactions = []
         self.chain.append(block)
         print(block.block_info())
@@ -33,6 +35,15 @@ class BlockChain:
         self.pending_transactions.append(transaction)
         return self.chain[-1]
     
+    def register_node(self, address):
+        parsed_url = urlparse(address)
+        if parsed_url.netloc:
+            self.nodes.add(parsed_url.netloc)
+        elif parsed_url.path:
+            self.nodes.add(parsed_url.path)
+        else:
+            raise ValueError('Invalid URL')
+
     def proof_of_work(self, last_proof):
         """
         Simple Proof of Work Algorithm:
